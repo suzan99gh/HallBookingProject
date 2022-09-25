@@ -1,0 +1,52 @@
+﻿@model HallBookingProject.Models.Home
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Home</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Homeimg" class="control-label"></label>
+                <input asp-for="Homeimg" class="form-control" />
+                <span asp-validation-for="Homeimg" class="text-danger"></span>
+            </div>
+  @*          <div class="form-group">
+                <label asp-for="Homeimg" class="control-label"></label>
+                <input asp-for="Homeimg" class="form-control" />
+                <span asp-validation-for="Img2" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="Img3" class="control-label"></label>
+                <input asp-for="Img3" class="form-control" />
+                <span asp-validation-for="Img3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Aboutid" class="control-label"></label>
+                <select asp-for="Aboutid" class ="form-control" asp-items="ViewBag.Aboutid"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contactid" class="control-label"></label>
+                <select asp-for="Contactid" class ="form-control" asp-items="ViewBag.Contactid"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

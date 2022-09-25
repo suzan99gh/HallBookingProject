@@ -1,0 +1,121 @@
+﻿@model IEnumerable<Categoryy>
+
+  
+
+@{
+    Layout = "~/views/Shared/_HomeLayout1.cshtml";
+}
+
+        <section class="site-hero overlay" style="background-image: url(~/Home/img/hall_1.jpg)  ">
+
+      <div class="container">
+        <div class="row site-hero-inner justify-content-center align-items-center">
+          <div class="col-md-10 text-center">
+            <h1 class="heading" data-aos="fade-up">Welcome to <em>Hall</em> Booking </h1>
+            <p class="sub-heading mb-5" data-aos="fade-up" data-aos-delay="100">Discover our Halls.</p>
+           @* <p data-aos="fade-up" data-aos-delay="100"><a href="#" class="btn uppercase btn-primary mr-md-2 mr-0 mb-3 d-sm-inline d-block">Explore The Halls</a> </p>*@
+        @*    <a href="#" class="btn uppercase btn-outline-light d-sm-inline d-block">Download</a>*@
+          </div>
+        </div>
+        <!-- <a href="#" class="scroll-down">Scroll Down</a> -->
+      </div>
+    </section>
+    <!-- END section -->
+
+  
+
+    <section class="section visit-section">
+
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="heading" data-aos="fade-right">You Can Reservation Many Type of Halls</h1>
+
+          </div>
+        </div>
+        <div class="row">
+
+            @*عشان يكون انواع القاعات dynamic*@
+
+            @foreach (var item in Model)
+            {
+
+                     <div class="col-lg-4 col-md-8 visit mb-3"  data-aos="fade-right"    >
+            <a asp-controller="Home" asp-action="CtegoryProducts" asp-route-id="@item.IdCat"  ><img src="~/Home/img/chose.png" alt="Image placeholder" class="img-fluid" > </a>
+            <h3><a asp-controller="Home" asp-action="CtegoryProducts" asp-route-id="@item.IdCat" >@item.CatName</a></h3>        
+            <div class="reviews-star float-left">
+              <span class="ion-android-star"></span>
+              <span class="ion-android-star"></span>
+              <span class="ion-android-star"></span>
+              <span class="ion-android-star-half"></span>
+              <span class="ion-android-star-outline"></span>
+            </div>
+           @* <span class="reviews-count float-right">
+              3,239 reviews
+            </span>*@
+          </div>
+
+
+                
+            }
+
+        </div>
+      </div>
+     
+    </section>
+    <!-- END section -->
+
+  
+
+    <section class="section testimonial-section">
+      <div class="container">
+        <div class="row justify-content-center text-center mb-5">
+          <div class="col-md-8">
+            <h2 class="heading" data-aos="fade-up">Testimonial</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="testimonial text-center">
+              <div class="author-image mb-3">
+                <img src="img/person_1.jpg" alt="Image placeholder" class="rounded-circle">
+              </div>
+              <blockquote>
+
+                <p>&ldquo;Et quidem, impedit eum fugiat excepturi iste aliquid suscipit, tempore, delectus rem soluta voluptatem distinctio sed dolores, magni fugit nemo cum expedita. Totam a accusantium sunt aut autem placeat officia.&rdquo;</p>
+              </blockquote>
+              <p><em>&mdash; Jean Smith</em></p>
+              
+            </div>
+          </div>
+          <!-- END col -->
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="testimonial text-center">
+              <div class="author-image mb-3">
+                <img src="img/person_2.jpg" alt="Image placeholder" class="rounded-circle">
+              </div>
+              <blockquote>
+                <p>&ldquo;Lorem ipsum dolor sit amet, consectetur adipisicing elit. In dolor, iusto doloremque quo odio repudiandae sunt eveniet? Enim facilis laborum voluptate id porro, culpa maiores quis, blanditiis laboriosam alias&rdquo;</p>
+              </blockquote>
+              <p><em>&mdash; John Doe</em></p>
+            </div>
+          </div>
+          <!-- END col -->
+
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="testimonial text-center">
+              <div class="author-image mb-3">
+                <img src="img/person_3.jpg" alt="Image placeholder" class="rounded-circle">
+              </div>
+              <blockquote>
+
+                <p>&ldquo;Nostrum, alias, provident magnam sit blanditiis laboriosam unde quaerat, at ipsam, ratione maiores saepe nisi modi corporis quas! Beatae quam, quod aspernatur debitis nesciunt quasi porro ea iste nobis aliquid perspiciatis nostrum culpa impedit aut, iure blanditiis itaque similique sunt!&rdquo;</p>
+              </blockquote>
+              <p><em>&mdash; John Doe</em></p>
+            </div>
+          </div>
+          <!-- END col -->
+        </div>
+      </div>
+    </section>

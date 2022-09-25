@@ -1,0 +1,57 @@
+﻿
+@{
+      Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+       <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"> Users </h5>
+                  <div class="table-responsive">
+                    <table
+                      id="zero_config"
+                      class="table table-striped table-bordered"
+                    >
+                      <thead>
+                        <tr>
+                          <th>First Name</th>
+                          <th>Last Name</th>
+                          <th>Email</th>
+                          <th>Phone Number</th>
+              @*      <th> Role</th>*@
+
+                          <th>Profile Picture</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                          @foreach (var item in Model)
+                         {
+                          
+                        <tr>
+                          <td>@item.Fname</td>
+                          <td>@item.Lname</td>
+                           
+
+                          <td>@item.Email</td>
+                          <td>@item.Phonenum</td>
+     @*           <td>@item.Role</td>*@
+                          <td> <img src=@Url.Content("~/Image/"+item.ProfilePic) asp-append-version="true" alt="User Profile Picture" height="85" width="85" /> </td>
+                        </tr>
+                        }
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                         <th>First Name</th>
+                          <th>Last Name</th>
+                          <th>Email</th>
+                          <th>Phone Number</th>
+                
+                          <th>Profile Picture</th>
+                    
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>
