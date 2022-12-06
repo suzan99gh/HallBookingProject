@@ -29,13 +29,24 @@ namespace HallBookingProject.Controllers
         }
      
 
-        public IActionResult Index()
+        public IActionResult Index(string ? profilePic)
         {
+            ViewBag.Feed = _context.Feedbacks.Where(p => p.Email == "Accept").ToList();
+             //ViewBag.ProfilePic = HttpContext.Session.GetString("CustmerPic");
             //var result = _context.Homes.ToList().FirstOrDefault();
+      
+
 
             var categories = _context.Categoryys.ToList();
+            var homes = _context.Homes.ToList();
+            var halls = _context.Halls.ToList();
+            var countactUs = _context.Contacts.ToList();
+            var testimonials = _context.Feedbacks.ToList();
+            var AboutUs = _context.AboutUs.ToList();
+            var model3 = Tuple.Create<IEnumerable<Home>, IEnumerable<Categoryy>, IEnumerable<Hall>, IEnumerable<Contact>, IEnumerable<Feedback>, IEnumerable<AboutU>>(homes, categories, halls, countactUs, testimonials, AboutUs);
 
-            return View(categories);
+
+            return View(model3);
         }
 
         public IActionResult Num()
@@ -46,21 +57,24 @@ namespace HallBookingProject.Controllers
         }
 
 
-
-
         public IActionResult CtegoryProducts(int? Id)
         {
-            //----------
-            //ViewBag.hallId =_context.Halls.Select(x=>x.IdHall);
-            //------------
+            ViewBag.CustmerId = HttpContext.Session.GetInt32("CustmerId");
+            ViewBag.CustmerEmail = HttpContext.Session.GetString("CustmerEmail");
+            ViewBag.CustmerPic = HttpContext.Session.GetString("CustmerPic");
+
+
             var halls = _context.Halls.Where(x => x.Catid == Id).ToList();
             return View(halls);
         }
+
 
         public IActionResult Contacts()
         {
             return View();
         }
+
+
 
         public IActionResult Privacy()
         {
@@ -68,10 +82,14 @@ namespace HallBookingProject.Controllers
         }
 
 
+
+
         public IActionResult AboutUs()
         {
             return View();
         }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -14,11 +14,11 @@ namespace HallBookingProject.Controllers
     public class HomesController : Controller
     {
         private readonly ModelContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        public readonly IWebHostEnvironment _webHostEnviroment;
         public HomesController(ModelContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment;
+            _webHostEnviroment = webHostEnvironment;
         }
 
         // GET: Homes
@@ -117,7 +117,7 @@ namespace HallBookingProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("IdHome,Img1,Img2,Img3,Aboutid,Contactid")] Home home)
+        public async Task<IActionResult> Edit(decimal id, [Bind("IdHome,Img1,Img2,Img3,Aboutid,Contactid,Homeimg")] Home home)
         {
             if (id != home.IdHome)
             {
@@ -126,8 +126,25 @@ namespace HallBookingProject.Controllers
 
             if (ModelState.IsValid)
             {
+                   
+
+
                 try
                 {
+
+                    if (home.Homeimg != null)
+                    {
+                        string wwwrootPath = _webHostEnviroment.WebRootPath;
+                        string fileName = Guid.NewGuid().ToString() + "" + home.Homeimg.FileName;
+                        string path = Path.Combine(wwwrootPath + "/Image/", fileName);
+                        using (var filestream = new FileStream(path, FileMode.Create))
+                        {
+                            await home.Homeimg.CopyToAsync(filestream);
+                        }
+                        home.Img1 = fileName;
+                    }
+
+
                     _context.Update(home);
                     await _context.SaveChangesAsync();
                 }
@@ -144,6 +161,8 @@ namespace HallBookingProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+
             ViewData["Aboutid"] = new SelectList(_context.AboutUs, "IdAbout", "Description", home.Aboutid);
             ViewData["Contactid"] = new SelectList(_context.Contacts, "IdContact", "Email", home.Contactid);
             return View(home);

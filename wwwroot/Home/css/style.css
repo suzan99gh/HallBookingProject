@@ -184,7 +184,7 @@ textarea.form-control {
 }
 
 .site-hero.overlay:before {
-  background: rgba(0, 0, 0, 0.45);
+  background: #e61c5d;
   content: "";
   position: absolute;
   height: 100vh;

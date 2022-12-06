@@ -119,7 +119,7 @@ namespace HallBookingProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("IdHall,HallName,HallDesc,Img1,Img2,Img3,Catid")] Hall hall)
+        public async Task<IActionResult> Edit(decimal id, [Bind("IdHall,HallName,HallDesc,Img1,Img2,Img3,Catid,ImageFile")] Hall hall)
         {
             if (id != hall.IdHall)
             {
@@ -128,8 +128,28 @@ namespace HallBookingProject.Controllers
 
             if (ModelState.IsValid)
             {
+                if (hall.ImageFile != null)
+                {
+                    //------------------------
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + "_" + hall.ImageFile.FileName;
+                    string path = Path.Combine(wwwRootPath + "/Image/", fileName);
+
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await hall.ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    hall.Img1 = fileName;
+                   _context.Update(hall);
+                  await _context.SaveChangesAsync();
+                }
+                
+
                 try
                 {
+
+                 
                     _context.Update(hall);
                     await _context.SaveChangesAsync();
                 }
@@ -185,9 +205,84 @@ namespace HallBookingProject.Controllers
             return _context.Halls.Any(e => e.IdHall == id);
         }
 
-        public IActionResult UserIndex()
+        //public IActionResult UserIndex()
+        //{
+        //    return View();
+        //}
+
+
+
+        [HttpGet]
+        public IActionResult UserIndex(int? Id)
         {
-            return View();
+            ViewBag.CustmerId = HttpContext.Session.GetInt32("CustmerId");
+            ViewBag.CustmerEmail = HttpContext.Session.GetString("CustmerEmail");
+            ViewBag.CustmerPic = HttpContext.Session.GetString("CustmerPic");
+
+            Hall hall = new Hall();
+/*Where(x => x.Catid == Id)*/;
+            var halls = _context.Halls.ToList();
+            return View(halls);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UserIndex(int? Id, /*string searchBy,*/ string searchTerm, Hall hall)
+
+        {
+            var halls = _context.Halls.ToList();
+            ViewBag.CustmerId = HttpContext.Session.GetInt32("CustmerId");
+            ViewBag.CustmerEmail = HttpContext.Session.GetString("CustmerEmail");
+            ViewBag.CustmerPic = HttpContext.Session.GetString("CustmerPic");
+            HttpContext.Session.SetString("HallPrice", hall.Img2);
+            //var modelContext = _context.Reservations.Include(x => x.Hall) ;
+
+            try
+            {
+                if (string.IsNullOrEmpty(searchTerm))
+                {
+                    var modelContext = _context.Halls.Where(x => x.Catid == Id);          /*Include(h => h.Img3).Include(h => h.HallName)*/
+                    //return View(await modelContext.ToListAsync());
+                    return View(halls);
+                }
+                else
+                {
+                    var hallcat = _context.Halls.Where(x => x.Catid == Id);
+
+                    var modelContext = _context.Halls.Where(x => x.HallName.ToUpper().Contains(searchTerm.ToUpper()) || x.HallName.ToUpper().Contains(searchTerm.ToUpper()) || x.Img3.ToUpper().Contains(searchTerm.ToUpper()));
+                    return View(await modelContext.ToListAsync());
+                }
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("UserIndex", "Hall", Id);
+            }
+
+
+            /*Include(h => h.Img3).Include(h => h.HallName).*/
+
+
+            //if (searchBy == "HallName")
+            //{
+
+            //    //ViewBag.hallSearch = _context.Hall.Where(x => x.).
+            //    //var result = await halls.Where(x => x.HallName == search || search == null).ToList();
+            //    return View(/*result*/);
+            //}
+            //else
+            //{
+            //    //return View(db.Employees.Where(x => x.Name.StartsWith(search) || search == null).ToList());jkjk
+            //}
+
+
+            //----------
+            //ViewBag.hallId =_context.Halls.Select(x=>x.IdHall);
+            //------------
+
+            //return View(halls);
+        }
+
+
+
     }
 }

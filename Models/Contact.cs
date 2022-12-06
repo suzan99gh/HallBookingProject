@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -13,6 +14,7 @@ namespace HallBookingProject.Models
         }
 
         public decimal IdContact { get; set; }
+        [Display(Name = "Full Name ")]
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Message { get; set; }

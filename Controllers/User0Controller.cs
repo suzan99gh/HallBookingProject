@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HallBookingProject.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace HallBookingProject.Controllers
 {
     public class User0Controller : Controller
     {
         private readonly ModelContext _context;
-
-        public User0Controller(ModelContext context)
+        private readonly IWebHostEnvironment _webHostEnviroment;
+        public User0Controller(ModelContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnviroment = webHostEnvironment;
         }
 
         // GET: User0
@@ -98,7 +101,7 @@ namespace HallBookingProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("IdUser,Fname,Lname,Email,Phonenum,ProfilePic,Roleid")] User0 user0)
+        public async Task<IActionResult> Edit(decimal id, [Bind("IdUser,Fname,Lname,Email,Phonenum,ProfilePic,Roleid,ImageProfile")] User0 user0)
         {
             if (id != user0.IdUser)
             {
@@ -107,22 +110,19 @@ namespace HallBookingProject.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                if (user0.ImageProfile != null)
                 {
-                    _context.Update(user0);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!User0Exists(user0.IdUser))
+                    string wwwrootPath = _webHostEnviroment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + "" + user0.ImageProfile.FileName;
+                    string path = Path.Combine(wwwrootPath + "/Image/", fileName);
+                    using (var filestream = new FileStream(path, FileMode.Create))
                     {
-                        return NotFound();
+                        await user0.ImageProfile.CopyToAsync(filestream);
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    user0.ProfilePic = fileName;
                 }
+                _context.Update(user0);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Roleid"] = new SelectList(_context.Userroles, "Roleid", "RoleName", user0.Roleid);
@@ -164,7 +164,45 @@ namespace HallBookingProject.Controllers
             return _context.User0s.Any(e => e.IdUser == id);
         }
 
-     
 
+        public async Task<IActionResult> UserProfile ()
+        {
+            ViewBag.CustmerId = HttpContext.Session.GetInt32("CustmerId");
+            ViewBag.CustmerEmail = HttpContext.Session.GetString("CustmerEmail");
+            ViewBag.CustmerPic = HttpContext.Session.GetString("CustmerPic");
+
+            int? id = HttpContext.Session.GetInt32("CustmerId");
+            var user = _context.User0s.Where(x => x.IdUser == id).FirstOrDefault();
+        
+            return View(user);
+        }
+
+        public async Task<IActionResult> UserUpdate(decimal id, [Bind("IdUser,Fname,Lname,Email,Phonenum,ProfilePic,Roleid,ImageProfile")] User0 user0)
+        {
+            if (id != user0.IdUser)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (user0.ImageProfile != null)
+                {
+                    string wwwrootPath = _webHostEnviroment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + "" + user0.ImageProfile.FileName;
+                    string path = Path.Combine(wwwrootPath + "/Image/", fileName);
+                    using (var filestream = new FileStream(path, FileMode.Create))
+                    {
+                        await user0.ImageProfile.CopyToAsync(filestream);
+                    }
+                    user0.ProfilePic = fileName;
+                }
+                _context.Update(user0);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["Roleid"] = new SelectList(_context.Userroles, "Roleid", "RoleName", user0.Roleid);
+            return View(user0);
+        }
     }
 }

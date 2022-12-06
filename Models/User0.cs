@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -21,6 +23,11 @@ namespace HallBookingProject.Models
         public long? Phonenum { get; set; }
         public string ProfilePic { get; set; }
         public decimal? Roleid { get; set; }
+
+
+        [NotMapped]
+        public IFormFile ImageProfile { get; set; }
+
 
         public virtual Userrole Role { get; set; }
         public virtual ICollection<Feedback> Feedbacks { get; set; }

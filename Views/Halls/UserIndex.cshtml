@@ -1,5 +1,106 @@
-﻿@{
+﻿@model IEnumerable<Hall> 
+
+@{
     Layout = "~/views/Shared/_HomeLayout1.cshtml";
 }
 
 
+
+<head>
+     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+   <link href="~/Content/bootstrap.css" rel="stylesheet" />
+   <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+   <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+</head>
+
+
+@*style="background-image: url(~/assets/Home/img/hall_1.jpg)"*@
+
+    <section class="site-hero overlay page-inside" style="background-color:#B795A6">
+      <div class="container">
+        <div class="row site-hero-inner justify-content-center align-items-center">
+          <div class="col-md-10 text-center">
+            <h1 class="heading" data-aos="fade-up">Choose your favorite hall</h1>
+            <p class="sub-heading mb-5" data-aos="fade-up" data-aos-delay="100">Events, news and activities in the hotel.</p>
+          </div>
+        </div>
+        <!-- <a href="#" class="scroll-down">Scroll Down</a> -->
+      </div>
+    </section>
+    <!-- END section -->
+
+    
+    <section class="section bg-light post">
+      <div class="container">
+
+           <!-- Search  section -->
+            <form asp-action="CtegoryProducts" class="narrow-w form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay="200">
+	     
+		 	<input type="text" class="form-control px-4" name="searchTerm" placeholder="Search by the Name or  address" />
+		 	<button type="submit" class="btn btn-primary">Search</button>
+		 
+	       </form>
+		     <a style="width:11em;" class="btn btn-primary"  asp-action="CtegoryProducts">Reset Search</a> <br /> <br /> <br />
+        
+            <!-- Search END section -->
+
+
+        <div class="row">
+          <div class="col-md-8">
+
+            <div class="row mb-5">
+              @foreach (var item in Model)
+             {
+                 
+            
+              <div class="col-md-6">
+                <div class="media media-custom d-block mb-4">
+                  <a asp-controller="Reservations" asp-action="Create" asp-route-id="@item.IdHall" class="mb-4 d-block"><img src=@Url.Content("~/Image/"+item.Img1) asp-append-version="true" alt="Image of Hall" class="img-fluid"></a>
+                  <div class="media-body">
+                    
+                    <h2 class="mt-0 mb-3"><a asp-controller="Reservations" asp-action="Create"  >@item.HallName</a></h2>
+                     <h3 class="mt-0 mb-3">@item.Img2 ........ @item.Img3</h3>
+                    <span class="meta-post">@item.HallDesc</span>
+                  </div>
+                </div>
+              </div>
+               }
+
+            </div>
+
+           
+
+
+
+          </div>
+          <!-- END content -->
+          <div class="col-md-4">
+            <div class="row">
+
+              <div class="col-md-11 ml-auto">
+
+            
+                <div class="side-box">
+                  <h2 class="heading">Categories</h2>
+                  <ul class="post-categories list-unstyled">
+
+                    <li><a asp-controller="Home" asp-action="CtegoryProducts" asp-route-id="1">Study Halls </a></li>
+                    <li><a asp-controller="Home" asp-action="CtegoryProducts" asp-route-id="2">Meeting Halls </a></li>
+                    <li><a asp-controller="Home" asp-action="CtegoryProducts" asp-route-id="3">Weeding Halls </a></li>
+               
+                  </ul>
+                </div>
+                  
+              </div>
+              
+           
+             
+
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </section>

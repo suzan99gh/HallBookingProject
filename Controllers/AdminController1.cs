@@ -24,8 +24,8 @@ namespace HallBookingProject.Controllers
         public IActionResult Index()
         {
             /*int?*/
-            ViewBag.id = HttpContext.Session.GetInt32("AdminId");
-            //var user = _context.User0s.Where(x => x.IdUser == id).FirstOrDefault(); 22/9
+           int? id = HttpContext.Session.GetInt32("AdminId");
+            var user = _context.User0s.Where(x => x.IdUser == id).FirstOrDefault(); 
 
             //ViewBag.Users = _context.User0s.ToList().Count();
             //-------------------------
@@ -39,26 +39,29 @@ namespace HallBookingProject.Controllers
             var hall = _context.Halls.ToList();
             var reservition = _context.Reservations.ToList();
             var hallName = _context.Halls.Select(x => x.HallName).ToList();
-            //List<int> Count = new List<int>();
-            //foreach (var item in hallName)
-            //{
-            //    Count.Add(reservition.Count(x => x.Hall.HallName == item));
-            //}
+            List<int> Count = new List<int>();
+            foreach (var item in hallName)
+            {
+                Count.Add(reservition.Count(x => x.Hall.HallName == item));
+            }
 
-            //ViewBag.hallName = hallName;
-            //ViewBag.Count = Count;
+            ViewBag.hallName = hallName;
+            ViewBag.Count = Count;
 
 
             //ViewData["Roleid"] = new SelectList(_context.Userroles, "Roleid", "RoleName");
-            return View(/*user*/);
+            return View(user);
         }
 
         public IActionResult UserProfile()
         {
 
+            int? id = HttpContext.Session.GetInt32("AdminId");
+            var user = _context.User0s.Where(x => x.IdUser == id).FirstOrDefault();
+            ViewBag.CustmerPic = HttpContext.Session.GetString("AdminPic");
 
-
-            return View();
+            ViewBag.UserId = id;
+            return View(user);
         }
 
         public IActionResult JoinTables()
@@ -141,6 +144,7 @@ namespace HallBookingProject.Controllers
 
         public IActionResult SendEmail()
         {
+
 
 
             MimeMessage message = new MimeMessage();

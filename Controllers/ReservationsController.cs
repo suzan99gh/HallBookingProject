@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HallBookingProject.Models;
 using Microsoft.AspNetCore.Http;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace HallBookingProject.Controllers
 {
@@ -32,8 +34,9 @@ namespace HallBookingProject.Controllers
             //var hallsCount = HttpContext.Session.GetString("Hall_Count");
 
             //ViewBag.unbooked = ViewBag.booked - hallsCount;
-
-
+            ViewBag.waitting      = _context.Reservations.Where(p => p.Status == "Accept").Count();
+            ViewBag.resultReject = _context.Reservations.Where(p => p.Status == "Requested").Count();
+            ViewBag.result = _context.Reservations.Where(p => p.Status == "Accept").Count();
 
             var modelContext = _context.Reservations.Include(r => r.Hall).Include(r => r.Pay).Include(r => r.User);
             return View(await modelContext.ToListAsync());
@@ -44,6 +47,7 @@ namespace HallBookingProject.Controllers
 
         public async Task<IActionResult> Index(DateTime? StartEvent, DateTime? EndEvent , string status)
         {
+            
 
             var modelContext = _context.Reservations.Include(x => x.Hall).Include(x => x.User);
             if (StartEvent == null && EndEvent == null)
@@ -143,11 +147,14 @@ namespace HallBookingProject.Controllers
 
                 //ViewBag.hallId = _context.Halls.Select(x => x.IdHall);
                 reservation.Status = "Requested";
+
+            
+
                 reservation.Hallid = id;
                 reservation.Userid = HttpContext.Session.GetInt32("CustmerId");
                 _context.Add(reservation);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index" , "Home");
             }
             ViewData["Hallid"] = new SelectList(_context.Halls, "IdHall", "HallName", reservation.Hallid);
             ViewData["Payid"] = new SelectList(_context.Visas, "IdPayment", "CardName", reservation.Payid);
@@ -158,6 +165,10 @@ namespace HallBookingProject.Controllers
         // GET: Reservations/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
+            ViewBag.CustmerId = HttpContext.Session.GetInt32("CustmerId");
+            ViewBag.CustmerEmail = HttpContext.Session.GetString("CustmerEmail");
+            ViewBag.CustmerPic = HttpContext.Session.GetString("CustmerPic");
+
             if (id == null)
             {
                 return NotFound();
@@ -181,6 +192,10 @@ namespace HallBookingProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(decimal id, [Bind("IdBook,Status,StartEvent,EndEvent,Hallid,Userid,Payid")] Reservation reservation)
         {
+            ViewBag.CustmerId = HttpContext.Session.GetInt32("CustmerId");
+            ViewBag.CustmerEmail = HttpContext.Session.GetString("CustmerEmail");
+            ViewBag.CustmerPic = HttpContext.Session.GetString("CustmerPic");
+
             if (id != reservation.IdBook)
             {
                 return NotFound();
@@ -296,6 +311,55 @@ namespace HallBookingProject.Controllers
 
             //return View ();
         }
+
+
+
+        public IActionResult SendEmail(/*string email,*/ [Bind("IdBook,Status,StartEvent,EndEvent,Hallid,Userid,Payid")] Reservation reservation)
+        {/**/
+            ViewBag.CustmerId = HttpContext.Session.GetInt32("CustmerId");
+            ViewBag.CustmerEmail = HttpContext.Session.GetString("CustmerEmail");
+            ViewBag.CustmerPic = HttpContext.Session.GetString("CustmerPic");
+
+            var email = ViewBag.CustmerEmail;
+            //reservation.User.Email = HttpContext.Session.GetString("CustmerEmail");
+
+            MimeMessage message = new MimeMessage();
+            MailboxAddress from = new MailboxAddress("Hall Finder", "s.moe12@yahoo.com");
+            message.From.Add(from);
+            MailboxAddress to = new MailboxAddress("User", "suzan.gh99@gmail.com" );
+            message.To.Add(to);
+            message.Subject = "Status of your reservation";
+            BodyBuilder bodyBuilder = new BodyBuilder();
+
+            if(reservation.Status == "Accept")
+            {
+            bodyBuilder.HtmlBody =
+            "<h1 style=\"color:#7fb685\"> Thank you for trusting us </h1> <h3> Your Reservition are Accepttd <br /> <br /> " +
+            "  <h3> To complite your Reservition  <a  href=\"https://localhost:44301/Visas/Create\" > Click HERE</a>    </h3> </h3>";
+             }
+
+            else
+            {
+                bodyBuilder.HtmlBody =
+            "<h1 style=\"color:#7fb685\"> Thank you for trusting us </h1> <h3> <b> Sorry <b> , Your Reservition are Rejectted </h3>";
+            }
+            message.Body = bodyBuilder.ToMessageBody();
+            using (var clinte = new SmtpClient())
+            {
+                clinte.Connect("smtp.mail.yahoo.com", 465, true);
+                clinte.Authenticate("s.moe12@yahoo.com", "rxlhovtglvjibneg");
+
+                clinte.Send(message);
+                clinte.Disconnect(true);
+
+            }
+
+            return View();
+        }
+
+
+
+     
 
 
     }

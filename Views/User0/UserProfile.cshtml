@@ -1,0 +1,81 @@
+﻿@model HallBookingProject.Models.User0
+
+@{
+    Layout = "~/views/Shared/_HomeLayout1.cshtml";
+}
+@{
+    var Id = ViewBag.id;
+    var Cid = ViewBag.CustmerId;
+    var Cemail = ViewBag.CustmerEmail;
+    var Cpic = ViewBag.CustmerPic;  
+
+}  
+<section style="background-color: #eee;">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">@Model.Fname @Model.Lname
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+          @*  <li class="breadcrumb-item"><a href="#">User</a></li>*@
+            <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <img src="@Url.Content("~/Image/"+Model.ProfilePic)" alt="avatar"
+              class="rounded-circle img-fluid" style="width: 150px;">
+            <h5 class="my-3"> @Model.Fname @Model.Lname </h5>  
+           
+            <div class="d-flex justify-content-center mb-2">
+        
+        
+            </div>
+          </div>
+        </div>
+ @* asp-action="UserUpdate" asp-route-id="@item.IdUser"*@
+      </div>
+      <div class="col-lg-8">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Full Name</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Model.Fname @Model.Lname</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Email</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Model.Email</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Phone Number</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">@Model.Phonenum</p>
+              </div>
+            </div>
+            <hr>
+        
+          
+          </div>
+        </div>
+             <a style="color:crimson" class="dropdown-item" href="/User0/Edit/@Id"> Click HERE ! .. To Update your Profile !</a>
+      </div>
+    </div>
+  </div>
+</section>

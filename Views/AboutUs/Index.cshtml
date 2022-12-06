@@ -5,11 +5,11 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>About us Mange</h1>
 
-<p>
+@*<p>
     <a asp-action="Create">Create New</a>
-</p>
+</p>*@
 <table class="table">
     <thead>
         <tr>
@@ -38,9 +38,9 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdAbout">Edit</a> |
+                <a asp-action="Edit" asp-route-id="@item.IdAbout">Edit</a> @*|
                 <a asp-action="Details" asp-route-id="@item.IdAbout">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdAbout">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.IdAbout">Delete</a>*@
             </td>
         </tr>
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,6 +39,7 @@ namespace HallBookingProject.Controllers
             //    ModelState.AddModelError(email, "The Email already used ! ");
             //    return View();
             //}
+
             if (ModelState.IsValid)
             {
                 
@@ -46,8 +48,6 @@ namespace HallBookingProject.Controllers
 
                 _context.SaveChangesAsync();
                 
-
-            
                 Login login = new Login();
                 login.Email = email;
                 login.Password = password;
@@ -56,7 +56,7 @@ namespace HallBookingProject.Controllers
                 _context.Add(login);
                 _context.SaveChanges();
 
-                return RedirectToAction(nameof(Register));
+                return RedirectToAction( "Login" , "AuthController1");
 
             }
             //ViewData["Roleid"] = new SelectList(_context.Userroles, "Roleid", "RoleName", user0.Roleid);
@@ -88,22 +88,31 @@ namespace HallBookingProject.Controllers
 
 
         [HttpPost]
-        public IActionResult Login ([Bind("Email", "Password")] Login login)
+        public IActionResult Login (/*string ? profilePic*/ [Bind("Email", "Password")] Login login)
         {
-            var user = _context.Logins.Where(x => x.Email == login.Email && x.Password == login.Password).SingleOrDefault();
-            if(user != null)
+
+            //var user = _context.Logins.Where(x => x.Email == login.Email && x.Password == login.Password).SingleOrDefault();
+            var user = _context.Logins.Include(z => z.User).Where(x => x.Email == login.Email && x.Password == login.Password).SingleOrDefault();
+
+            if (user != null)
             {
                 switch(user.Roleeid)
                 {
                     case 1:
                         HttpContext.Session.SetInt32("AdminId", (int)user.Userid);
+                        HttpContext.Session.SetString("AdminEmail", user.Email);
+
+                        HttpContext.Session.SetString("AdminPic", user.User.ProfilePic);
+
                         return RedirectToAction("Index", "AdminController1");
 
                         //-------------------------------------------
 
                     case 2:
                         HttpContext.Session.SetInt32("CustmerId", (int)user.Userid);
-                     
+                        HttpContext.Session.SetString("CustmerEmail", (string)user.Email);
+              
+                        HttpContext.Session.SetString("CustmerPic", user.User.ProfilePic);
                         return RedirectToAction("Index", "Home");
                 }
             }
@@ -120,6 +129,13 @@ namespace HallBookingProject.Controllers
         public IActionResult Login()
         {
              return View();
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Login", "AuthController1");
         }
     }
 }

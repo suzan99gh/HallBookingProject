@@ -8,7 +8,7 @@ namespace HallBookingProject.Models
     public partial class Reservation
     {
         public decimal IdBook { get; set; }
-        public string ?Status { get; set; }
+        public string Status { get; set; }
         public DateTime? StartEvent { get; set; }
         public DateTime? EndEvent { get; set; }
         public decimal? Hallid { get; set; }

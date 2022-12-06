@@ -1,13 +1,12 @@
 ﻿@model IEnumerable<HallBookingProject.Models.Reservation>
 
-    @{
+
+
+@{
     var result = ViewBag.result;
+    var waitting = ViewBag.waitting;
+    var reject = ViewBag.resultReject;
 }
-
-
-
-
-
 
 @{
     ViewData["Title"] = "Index";
@@ -26,24 +25,76 @@
 
 <h1>Index</h1>
 
+@*
+
+<p>
+    @result
+</p>
+*@
 
 
+     
 
-<div class="col-md-8 col-lg-4 col-xlg-5" >
-     <
+@*<div class="col-md-6 col-lg-4 col-xlg-5" >
+     
+              <div class="card card-hover">
+               
+                  <h1 class="font-light text-white">  </h1>
+                    <i class="mdi mdi-face"></i>*@
+                  <div class="box bg-cyan text-center">
+                
+                  <h3 class="text-black">Number of Halls booked : @result</h3>
+      
+     
+                   </div>
+
+                      <div class="box bg-cyan text-center">
+                
+                  <h3 class="text-black">Number of Halls Rejected :  @waitting </h3>
+        
+     
+                   </div>
+              
+
+                     <div class="box bg-cyan text-center">
+                
+                  <h3 class="text-black">Number of Halls  Waitting : @reject </h3>
+         
+     
+                   </div>
+                  @* 
+                  @*         
+        
+              </div>
+ </div>*@
+            <!---------------->
+@*     <div class="col-md-6 col-lg-4 col-xlg-5" >
+     
               <div class="card card-hover">
                 <div class="box bg-cyan text-center">
                   <h1 class="font-light text-white">
                     <i class="mdi mdi-face"></i>
                  
                   </h1>
-                  <h3 class="text-white">Number of Halls booked:</h3>
-                  <h3 class="text-white" > @result</h3>
+                  <h3 class="text-white">Number of Halls Rehected:</h3>
+                  <h3 class="text-white" > </h3>
                 </div>
               </div>
-            </div>
-
-
+ </div>
+    
+     <div class="col-md-6 col-lg-4 col-xlg-5" >
+     
+              <div class="card card-hover">
+                <div class="box bg-cyan text-center">
+                  <h1 class="font-light text-white">
+                    <i class="mdi mdi-face"></i>
+                 
+                  </h1>
+                  <h3 class="text-white">Number of Halls Waitting :</h3>
+                  <h3 class="text-white" ></h3>
+                </div>
+              </div>
+ </div>*@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -95,17 +146,13 @@
             </td>
             <td>
 
-         @*       <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" value="Accept" type="submit" />
-                <input asp-for="Status" class="form-control" value="Reject" type="submit"  />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>*@
-                
+     
+               
 
-                <a asp-action="Edit" asp-route-id="@item.IdBook"   >Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdBook">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdBook">Delete</a>
+          
+                <a asp-action="Edit" asp-route-id="@item.IdBook " >Click here to Accept or Rejrct</a> 
+               @* <a asp-action="Details" asp-route-id="@item.IdBook">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdBook">Delete</a>*@
             </td>
         </tr>
 }
